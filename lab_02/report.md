@@ -32,6 +32,8 @@
 
 ### Algorithm
 
+![Algorithm](assets/actions_history.png)
+
 > 1. Create a new branch for the task.
 > 2. Create a new directory for the task.
 > 3. Create a assets directory for images.
