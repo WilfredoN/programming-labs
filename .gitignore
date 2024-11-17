@@ -1,7 +1,14 @@
 *.o
 *.a
+*.gcno
+*.gcda
+*.gcov
 *.lib
 *.exe
 *.out
 *.app
 .vscode/
+main
+run_tests
+coverage.info
+coverage_report/
