@@ -1,0 +1,4 @@
+Integer Calculation 1: 153
+Integer Calculation 2: 684
+Float Calculation 1: 23.5238
+Float Calculation 2: 125.274
