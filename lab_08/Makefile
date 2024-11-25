@@ -1,6 +1,8 @@
 CC = gcc
-CFLAGS = -Wall -g
-SRC_FILES = main.c lib.c
+CFLAGS = -Wall -g -Iinclude
+SRC_DIR = src
+INCLUDE_DIR = include
+SRC_FILES = main.c $(SRC_DIR)/lib.c
 OBJ_FILES = $(SRC_FILES:.c=.o)
 EXECUTABLE = main
 
