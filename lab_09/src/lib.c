@@ -3,40 +3,40 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-int sum_lower_triangle(int **matrix, int n)
+int sum_lower_triangle(int **arr, int rows, int cols)
 {
     int sum = 0;
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < rows && i < cols; i++)
     {
-        for (int j = 0; j <= i; j++)
+        for (int j = 0; j <= i && j < cols; j++)
         {
-            sum = sum + matrix[i][j];
+            sum = sum + arr[i][j];
         }
     }
     return sum;
 }
 
-void reverse_columns(int **matrix, int rows, int cols)
+void reverse_columns(int **arr, int rows, int cols)
 {
     for (int j = 0; j < cols; j++)
     {
         for (int i = 0; i < rows / 2; i++)
         {
-            int temp = matrix[i][j];
-            matrix[i][j] = matrix[rows - 1 - i][j];
-            matrix[rows - 1 - i][j] = temp;
+            int temp = arr[i][j];
+            arr[i][j] = arr[rows - 1 - i][j];
+            arr[rows - 1 - i][j] = temp;
         }
     }
 }
 
-int count_even_numbers(int **matrix, int rows, int cols)
+int count_even_numbers(int **arr, int rows, int cols)
 {
     int count = 0;
     for (int i = 0; i < rows; i++)
     {
         for (int j = 0; j < cols; j++)
         {
-            if (matrix[i][j] % 2 == 0)
+            if (arr[i][j] % 2 == 0)
             {
                 count++;
             }
@@ -59,20 +59,4 @@ double calculate_variance(int *array, int size)
     }
     int result = variance / size;
     return result;
-}
-
-int **generate_and_print_array(int rows, int cols)
-{
-    int **array = (int **)malloc(rows * sizeof(int *));
-    for (int i = 0; i < rows; i++)
-    {
-        array[i] = (int *)malloc(cols * sizeof(int));
-        for (int j = 0; j < cols; j++)
-        {
-            array[i][j] = rand() % 100;
-            printf("%d ", array[i][j]);
-        }
-        printf("\n");
-    }
-    return array;
 }

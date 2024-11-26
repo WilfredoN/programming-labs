@@ -14,7 +14,7 @@ void test_sum_lower_triangle()
         (int[]){2, 3, 0},
         (int[]){4, 5, 6}};
 
-    TEST_ASSERT_EQUAL_INT(21, sum_lower_triangle(arr1, 3));
+    TEST_ASSERT_EQUAL_INT(21, sum_lower_triangle(arr1, 3, 3));
 }
 
 void test_reverse_columns()
@@ -55,17 +55,4 @@ void test_calculate_variance()
     int arr[] = {1, 2, 3, 4, 5};
 
     TEST_ASSERT_FLOAT_WITHIN(0.000001, 2.0, calculate_variance(arr, 5));
-}
-
-void test_generate_and_print_array()
-{
-    int rows = 3, cols = 3;
-    int **array = generate_and_print_array(rows, cols);
-    TEST_ASSERT_NOT_NULL(array);
-
-    for (int i = 0; i < rows; i++)
-    {
-        free(array[i]);
-    }
-    free(array);
 }

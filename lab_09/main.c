@@ -2,50 +2,103 @@
 #include <stdlib.h>
 #include "lib.h"
 
+void fillTwoDimension(int **array, int rows, int cols);
+void fill(int *array, int size);
+void print(int **array, int rows, int cols);
 int main()
 {
-    int *arr1[] = {
-        (int[]){1, 0, 0},
-        (int[]){2, 3, 0},
-        (int[]){4, 5, 6}};
+    int row, col;
 
-    printf("Sum of lower triangle: %d\n", sum_lower_triangle(arr1, 3));
-    int *arr2[] = {
-        (int[]){1, 2, 3},
-        (int[]){4, 5, 6},
-        (int[]){7, 8, 9}};
+    printf("Enter number of rows: ");
+    scanf("%d", &row);
+    printf("Enter number of columns: ");
+    scanf("%d", &col);
 
-    reverse_columns(arr2, 3, 3);
-
-    printf("Reversed columns:\n");
-
-    for (int i = 0; i < 3; i++)
+    if (row <= 0 || col <= 0)
     {
-        for (int j = 0; j < 3; j++)
+        printf("Invalid row or column\n");
+        return 0;
+    }
+
+    int **arr = (int **)malloc(row * sizeof(int *));
+
+    for (int i = 0; i < row; i++)
+    {
+        arr[i] = (int *)malloc(col * sizeof(int));
+    }
+
+    fillTwoDimension(arr, row, col);
+    print(arr, row, col);
+    printf("Sum of lower triangle: %d\n", sum_lower_triangle(arr, row, col));
+
+    reverse_columns(arr, row, col);
+    printf("Reversed columns:\n");
+    for (int i = 0; i < row; i++)
+    {
+        for (int j = 0; j < col; j++)
         {
-            printf("%d ", arr2[i][j]);
+            printf("%d ", arr[i][j]);
         }
         printf("\n");
     }
 
-    int *arr3[] = {
-        (int[]){1, 2, 3},
-        (int[]){4, 5, 6},
-        (int[]){7, 8, 9}};
-    printf("Count of even numbers: %d\n", count_even_numbers(arr3, 3, 3));
+    int even_count = count_even_numbers(arr, row, col);
+    printf("Count of even numbers: %d\n", even_count);
 
-    int array[] = {1, 2, 3, 4, 5};
-    printf("Variance: %lf\n", calculate_variance(array, 5));
-
-    int rows = 3, cols = 3;
-    printf("Generated array:\n");
-    int **generated_array = generate_and_print_array(rows, cols);
-
-    for (int i = 0; i < rows; i++)
+    int size;
+    printf("Enter size of 1D array: ");
+    scanf("%d", &size);
+    if (size <= 0)
     {
-        free(generated_array[i]);
+        printf("Invalid size\n");
+        return 0;
     }
-    free(generated_array);
+
+    int *array = (int *)malloc(size * sizeof(int));
+    fill(array, size);
+
+    double variance = calculate_variance(array, size);
+    printf("Variance: %.2f\n", variance);
+    free(array);
+
+    for (int i = 0; i < row; i++)
+    {
+        free(arr[i]);
+    }
+    free(arr);
 
     return 0;
+}
+
+void fillTwoDimension(int **array, int rows, int cols)
+{
+    printf("Enter elements for the %dx%d array:\n", rows, cols);
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            printf("Element [%d][%d]: ", i + 1, j + 1);
+            scanf("%d", &array[i][j]);
+        }
+    }
+}
+void fill(int *array, int size)
+{
+    printf("Enter elements for the array:\n");
+    for (int i = 0; i < size; i++)
+    {
+        printf("Element [%d]: ", i + 1);
+        scanf("%d", &array[i]);
+    }
+}
+void print(int **array, int rows, int cols)
+{
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            printf("%d ", array[i][j]);
+        }
+        printf("\n");
+    }
 }
