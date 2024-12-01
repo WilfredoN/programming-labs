@@ -30,14 +30,7 @@ int main()
 
     reverse_columns(arr, row, col);
     printf("Reversed columns:\n");
-    for (int i = 0; i < row; i++)
-    {
-        for (int j = 0; j < col; j++)
-        {
-            printf("%d ", arr[i][j]);
-        }
-        printf("\n");
-    }
+    print(arr, row, col);
 
     int even_count = count_even_numbers(arr, row, col);
     printf("Count of even numbers: %d\n", even_count);
