@@ -26,3 +26,4 @@ main.o: main.c
 
 clean:
 	rm -rf $(OBJ_FILES) $(EXECUTABLE) *.o
+	rm -rf output_reverse.txt output_uppercase.txt
