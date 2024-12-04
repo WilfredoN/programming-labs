@@ -38,8 +38,8 @@ void displayServiceHistory(const vehicle_t *vehicle);         // Displays the se
 
 // SECONDARY
 void display(const vehicle_t *vehicle); // Displays the vehicle information.
-int modifyVehicle(vehicle_t *vehicle);  // Modifies the vehicle information.
-int modifyOwner(owner_t *owner);        // Modifies the owner information.
+void modifyVehicle(vehicle_t *vehicle); // Modifies the vehicle information.
+void modifyOwner(owner_t *owner);       // Modifies the owner information.
 
 // helpers
 bool isVehicleExist(const vehicle_t *vehicle, const char *id); // Checks if vehicle exists

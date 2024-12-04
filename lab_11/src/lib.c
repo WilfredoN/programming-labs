@@ -61,12 +61,12 @@ void display(const vehicle_t *vehicle)
     displayServiceHistory(vehicle);
 }
 
-int modifyVehicle(vehicle_t *vehicle)
+void modifyVehicle(vehicle_t *vehicle)
 {
     if (vehicle->owner.name[0] == '\0')
     {
         printf("No vehicle to modify.\n");
-        return 0;
+        return;
     }
 
     printf("Modify Vehicle Details:\n");
@@ -81,16 +81,14 @@ int modifyVehicle(vehicle_t *vehicle)
     scanf(" %d", &vehicle->year);
 
     printf("Vehicle details updated.\n");
-
-    return 1;
 }
 
-int modifyOwner(owner_t *owner)
+void modifyOwner(owner_t *owner)
 {
     if (owner->name[0] == '\0')
     {
         printf("No owner to modify.\n");
-        return 0;
+        return;
     }
     printf("Modify Owner Details:\n");
 
@@ -101,7 +99,6 @@ int modifyOwner(owner_t *owner)
     scanf(" %99[^\n]", owner->id);
 
     printf("Owner details updated.\n");
-    return 1;
 }
 
 bool isVehicleExist(const vehicle_t *vehicle, const char *id)

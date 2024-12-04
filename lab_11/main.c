@@ -4,11 +4,14 @@
 #include <stdbool.h>
 #include "lib.h"
 
+#define BUFFER_SIZE 100
+
 int main()
 {
     vehicle_t vehicle;
     bool isVehicleCreated = false;
     char choice = '\0';
+    char buffer[BUFFER_SIZE];
 
     memset(&vehicle, 0, sizeof(vehicle));
 
@@ -30,11 +33,15 @@ int main()
         }
         printf("q. Quit\n");
         printf("Enter your choice: ");
-        if (scanf(" %c", &choice) != 1)
+
+        if (fgets(buffer, sizeof(buffer), stdin) != NULL)
         {
-            printf("Invalid input.\n");
+            if (sscanf(buffer, " %c", &choice) != 1)
+            {
+                printf("Invalid input.\n");
+                choice = '\0';
+            }
         }
-        getchar();
 
         switch (choice)
         {
@@ -48,10 +55,16 @@ int main()
                 owner_t owner;
 
                 printf("Enter the owner's name: ");
-                scanf(" %99[^\n]", owner.name);
+                if (fgets(owner.name, sizeof(owner.name), stdin) != NULL)
+                {
+                    owner.name[strcspn(owner.name, "\n")] = '\0';
+                }
 
                 printf("Enter the owner's ID: ");
-                scanf(" %99[^\n]", owner.id);
+                if (fgets(owner.id, sizeof(owner.id), stdin) != NULL)
+                {
+                    owner.id[strcspn(owner.id, "\n")] = '\0';
+                }
 
                 if (isVehicleExist(&vehicle, owner.id))
                 {
@@ -60,16 +73,28 @@ int main()
                 }
 
                 printf("Enter the vehicle's brand: ");
-                scanf(" %99[^\n]", vehicle.brand);
+                if (fgets(vehicle.brand, sizeof(vehicle.brand), stdin) != NULL)
+                {
+                    vehicle.brand[strcspn(vehicle.brand, "\n")] = '\0';
+                }
 
                 printf("Enter the vehicle's model: ");
-                scanf(" %99[^\n]", vehicle.model);
+                if (fgets(vehicle.model, sizeof(vehicle.model), stdin) != NULL)
+                {
+                    vehicle.model[strcspn(vehicle.model, "\n")] = '\0';
+                }
 
                 printf("Enter the vehicle's year: ");
-                scanf("%d", &vehicle.year);
+                if (fgets(buffer, sizeof(buffer), stdin) != NULL)
+                {
+                    if (sscanf(buffer, "%d", &vehicle.year) != 1)
+                    {
+                        printf("Invalid year input.\n");
+                        break;
+                    }
+                }
 
                 registerVehicle(&vehicle, owner);
-
                 isVehicleCreated = true;
             }
             break;
@@ -82,7 +107,10 @@ int main()
             {
                 char id[MAX_ID_LENGTH];
                 printf("Enter Owner ID to modify Vehicle: ");
-                scanf(" %99[^\n]", id);
+                if (fgets(id, sizeof(id), stdin) != NULL)
+                {
+                    id[strcspn(id, "\n")] = '\0';
+                }
                 if (strcmp(vehicle.owner.id, id) == 0)
                 {
                     modifyVehicle(&vehicle);
@@ -102,7 +130,10 @@ int main()
             {
                 char id[MAX_ID_LENGTH];
                 printf("Enter Owner ID to modify Owner: ");
-                scanf(" %99[^\n]", id);
+                if (fgets(id, sizeof(id), stdin) != NULL)
+                {
+                    id[strcspn(id, "\n")] = '\0';
+                }
                 if (strcmp(vehicle.owner.id, id) == 0)
                 {
                     modifyOwner(&vehicle.owner);
@@ -123,7 +154,10 @@ int main()
                 char id[MAX_ID_LENGTH];
                 service_t service;
                 printf("Enter Owner ID to add Service: ");
-                scanf(" %99[^\n]", id);
+                if (fgets(id, sizeof(id), stdin) != NULL)
+                {
+                    id[strcspn(id, "\n")] = '\0';
+                }
                 if (strcmp(vehicle.owner.id, id) != 0)
                 {
                     printf("Vehicle with ID %s not found.\n", id);
@@ -131,13 +165,22 @@ int main()
                 }
 
                 printf("Enter the service name: ");
-                scanf(" %99[^\n]", service.name);
+                if (fgets(service.name, sizeof(service.name), stdin) != NULL)
+                {
+                    service.name[strcspn(service.name, "\n")] = '\0';
+                }
 
                 printf("Enter the service price: ");
-                scanf("%f", &service.price);
+                if (fgets(buffer, sizeof(buffer), stdin) != NULL)
+                {
+                    if (sscanf(buffer, "%f", &service.price) != 1)
+                    {
+                        printf("Invalid price input.\n");
+                        break;
+                    }
+                }
 
                 addServiceRecord(&vehicle, service);
-
                 printf("Service added to %s.\n", vehicle.model);
                 break;
             }
@@ -165,7 +208,7 @@ int main()
         if (choice != 'q')
         {
             printf("Press Enter to continue...");
-            getchar();
+            fgets(buffer, sizeof(buffer), stdin);
             system("clear");
         }
     }
