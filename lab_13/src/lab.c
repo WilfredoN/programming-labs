@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 
 #define MAX_NAME_LENGTH 50
 #define MAX_ID_LENGTH 20
@@ -40,20 +41,22 @@ typedef struct forward_list_t
     node_t *head;
 } forward_list_t;
 
-void push_front(forward_list_t *list, data_t data);
+void push_front(forward_list_t *list, vehicle_t data);
 void pop_front(forward_list_t *list);
 // implement this function
 void display_node(node_t *node);
 void display_list(forward_list_t *list);
+void display_list_id(forward_list_t *list);
+void display_list_owner(forward_list_t *list);
 void free_list(forward_list_t **list);
 void create_list(forward_list_t **list);
-node_t *create_node(data_t data);
-node_t *find(forward_list_t *list, data_t data); // find current node
-node_t *find_prev_node(forward_list_t *list, data_t data);
-void insert_after(forward_list_t *list, data_t target, data_t data);
-void insert_before(forward_list_t *list, data_t target, data_t data);
+node_t *create_node(vehicle_t data);
+node_t *find(forward_list_t *list, vehicle_t data); // find current node
+node_t *find_prev_node(forward_list_t *list, vehicle_t data);
+void insert_after(forward_list_t *list, vehicle_t target, vehicle_t data);
+void insert_before(forward_list_t *list, vehicle_t target, vehicle_t data);
 // add yourself
-void erase_after(forward_list_t *list, data_t target);
+void erase_after(forward_list_t *list, vehicle_t target);
 bool is_empty(forward_list_t *list);
 bool is_equal(vehicle_t first, vehicle_t second);
 
@@ -62,10 +65,7 @@ void display_list_2(node_t *head);
 int main(int argc, char const *argv[])
 {
     forward_list_t *list = NULL;
-    //
     create_list(&list);
-
-    // 1 Add elements
 
     vehicle_t data_1;
     strcpy(data_1.brand, "Tesla");
@@ -97,7 +97,6 @@ int main(int argc, char const *argv[])
     printf("Displaying list after insertions:\n");
     display_list(list);
 
-    // 5 Find previous node of data_2
     node_t *prev = find_prev_node(list, data_2);
     if (prev != NULL)
     {
@@ -118,21 +117,28 @@ int main(int argc, char const *argv[])
     data_4.length = 0;
     insert_before(list, data_2, data_4);
 
-    // 7 Display the list after insertion before
     printf("Displaying list after inserting before Honda Civic:\n");
     display_list(list);
+
+    printf("Displaying list by ID:\n");
+    display_list_id(list);
+
+    printf("Displaying list by Owner:\n");
+    display_list_owner(list);
 
     free_list(&list);
     return 0;
 }
 
-node_t *create_node(data_t data)
+node_t *create_node(vehicle_t data)
 {
     node_t *node = (node_t *)malloc(sizeof(node_t));
-    node->data.data = data.data;
+    node->data = data;
+    node->next = NULL;
+    return node;
 }
 
-void push_front(forward_list_t *list, data_t data)
+void push_front(forward_list_t *list, vehicle_t data)
 {
     node_t *node = create_node(data);
     node->next = list->head->next; // 1)
@@ -183,6 +189,27 @@ void display_list_2(node_t *head)
     printf("NULL\n");
 }
 
+void display_list_id(forward_list_t *list)
+{
+    node_t *current = list->head->next; // 1st
+    while (current != NULL)
+    {
+        printf("%s->", current->data.owner.id);
+        current = current->next;
+    }
+    printf("NULL\n");
+}
+void display_list_owner(forward_list_t *list)
+{
+    node_t *current = list->head->next; // 1st
+    while (current != NULL)
+    {
+        printf("%s->", current->data.owner.name);
+        current = current->next;
+    }
+    printf("NULL\n");
+}
+
 void free_list(forward_list_t **list)
 {
     node_t *current = (*list)->head->next; // 1st
@@ -205,14 +232,12 @@ void create_list(forward_list_t **list)
     // (*list)->head->data.data = -1; //it is not required
 }
 
-node_t *find(forward_list_t *list, data_t data)
+node_t *find(forward_list_t *list, vehicle_t data)
 {
-
     node_t *current = list->head->next; // 1st
     while (current)
     {
-        if (current->data.data == data.data)
-        // if (is_equal(current->data, data))
+        if (is_equal(current->data, data))
         {
             return current;
         }
@@ -235,19 +260,18 @@ node_t *find_prev_node(forward_list_t *list, vehicle_t data)
     return NULL;
 }
 
-void insert_after(forward_list_t *list, data_t target, data_t data)
+void insert_after(forward_list_t *list, vehicle_t target, vehicle_t data)
 {
-    node_t *current = find(list, target); // 1st
-    if (current)                          // current != NULL it is not equal to NULL
+    node_t *current = find(list, target);
+    if (current)
     {
-        node_t *for_insert = (node_t *)malloc(sizeof(node_t));
-        for_insert->data.data = data.data;
+        node_t *for_insert = create_node(data);
         for_insert->next = current->next;
         current->next = for_insert;
     }
 }
 
-void insert_before(forward_list_t *list, data_t target, data_t data)
+void insert_before(forward_list_t *list, vehicle_t target, vehicle_t data)
 {
     node_t *current = find_prev_node(list, target); // 1st
     if (current)
@@ -277,7 +301,7 @@ void display_node(node_t *node)
     }
 }
 
-void erase_after(forward_list_t *list, data_t target)
+void erase_after(forward_list_t *list, vehicle_t target)
 {
     node_t *current = find(list, target);
     if (current)
