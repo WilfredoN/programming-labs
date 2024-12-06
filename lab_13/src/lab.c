@@ -43,19 +43,23 @@ typedef struct forward_list_t
 
 void push_front(forward_list_t *list, vehicle_t data);
 void pop_front(forward_list_t *list);
-// implement this function
+
 void display_node(node_t *node);
 void display_list(forward_list_t *list);
 void display_list_id(forward_list_t *list);
 void display_list_owner(forward_list_t *list);
+
 void free_list(forward_list_t **list);
+
 void create_list(forward_list_t **list);
 node_t *create_node(vehicle_t data);
-node_t *find(forward_list_t *list, vehicle_t data); // find current node
+
+node_t *find(forward_list_t *list, vehicle_t data);
 node_t *find_prev_node(forward_list_t *list, vehicle_t data);
+
 void insert_after(forward_list_t *list, vehicle_t target, vehicle_t data);
 void insert_before(forward_list_t *list, vehicle_t target, vehicle_t data);
-// add yourself
+
 void erase_after(forward_list_t *list, vehicle_t target);
 bool is_empty(forward_list_t *list);
 bool is_equal(vehicle_t first, vehicle_t second);
@@ -98,6 +102,7 @@ int main(int argc, char const *argv[])
     display_list(list);
 
     node_t *prev = find_prev_node(list, data_2);
+
     if (prev != NULL)
     {
         printf("Prev node details:\n");
@@ -141,7 +146,7 @@ node_t *create_node(vehicle_t data)
 void push_front(forward_list_t *list, vehicle_t data)
 {
     node_t *node = create_node(data);
-    node->next = list->head->next; // 1)
+    node->next = list->head->next;
     list->head->next = node;
 }
 
@@ -151,7 +156,6 @@ void pop_front(forward_list_t *list)
     {
         return;
     }
-    // the 1st elem in a list
     node_t *for_deletion = list->head->next;
     list->head->next = list->head->next->next;
     free(for_deletion);
@@ -159,7 +163,7 @@ void pop_front(forward_list_t *list)
 
 void display_list(forward_list_t *list)
 {
-    node_t *current = list->head->next; // 1st
+    node_t *current = list->head->next;
     while (current != NULL)
     {
         printf("Brand: %s, Model: %s, Year: %d, Owner: %s, ID: %s\n",
@@ -175,7 +179,7 @@ void display_list(forward_list_t *list)
 
 void display_list_2(node_t *head)
 {
-    node_t *current = head; // 1st
+    node_t *current = head;
     while (current != NULL)
     {
         printf("Brand: %s, Model: %s, Year: %d, Owner: %s, ID: %s\n",
@@ -191,7 +195,7 @@ void display_list_2(node_t *head)
 
 void display_list_id(forward_list_t *list)
 {
-    node_t *current = list->head->next; // 1st
+    node_t *current = list->head->next;
     while (current != NULL)
     {
         printf("%s->", current->data.owner.id);
@@ -201,7 +205,7 @@ void display_list_id(forward_list_t *list)
 }
 void display_list_owner(forward_list_t *list)
 {
-    node_t *current = list->head->next; // 1st
+    node_t *current = list->head->next;
     while (current != NULL)
     {
         printf("%s->", current->data.owner.name);
@@ -212,7 +216,7 @@ void display_list_owner(forward_list_t *list)
 
 void free_list(forward_list_t **list)
 {
-    node_t *current = (*list)->head->next; // 1st
+    node_t *current = (*list)->head->next;
     while (current)
     {
         node_t *for_deletion = current;
@@ -229,12 +233,11 @@ void create_list(forward_list_t **list)
     *list = (forward_list_t *)malloc(sizeof(forward_list_t));
     (*list)->head = (node_t *)malloc(sizeof(node_t));
     (*list)->head->next = NULL;
-    // (*list)->head->data.data = -1; //it is not required
 }
 
 node_t *find(forward_list_t *list, vehicle_t data)
 {
-    node_t *current = list->head->next; // 1st
+    node_t *current = list->head->next;
     while (current)
     {
         if (is_equal(current->data, data))
@@ -273,7 +276,7 @@ void insert_after(forward_list_t *list, vehicle_t target, vehicle_t data)
 
 void insert_before(forward_list_t *list, vehicle_t target, vehicle_t data)
 {
-    node_t *current = find_prev_node(list, target); // 1st
+    node_t *current = find_prev_node(list, target);
     if (current)
         if (current)
         {
@@ -325,24 +328,3 @@ bool is_equal(vehicle_t first, vehicle_t second)
            strcmp(first.owner.name, second.owner.name) == 0 &&
            strcmp(first.owner.id, second.owner.id) == 0;
 }
-
-//
-// HEAD -> NULL
-
-// HEAD -> NODE1 -> NODE2 ...
-
-// NODEX before NODE1
-
-// NODEX -> NODE1  (prev HEAD->next)
-
-// HEAD -> next -> NODE1 -> NODE2 -> ...
-// NODEX -> next
-
-// HEAD -> next -> NODEX -> next > NODE1 -> NODE2 -> ...
-
-// 2
-// HEAD -> next -> NODEX -> next -> NODE1 -> NODE2 -> ...
-
-// TMP -> next -> NODEX
-
-// HEAD -> next -> HEAD -> next -> next (NODE1)
