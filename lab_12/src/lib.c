@@ -1,31 +1,57 @@
 #include <lib.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
 
 char *strconcat(char *str1, char *str2)
 {
-    char *result = str1;
+    if (str1 == NULL)
+        str1 = "";
+    if (str2 == NULL)
+        str2 = "";
 
-    // While no endline
-    while (*str1 != '\0')
+    int len1 = 0;
+    int len2 = 0;
+
+    while (str1[len1] != '\0')
     {
-        str1++;
+        len1++;
     }
 
-    // While no endline copy str2 to str1
-    while (*str2 != '\0')
+    while (str2[len2] != '\0')
     {
-        *str1 = *str2;
-        str1++;
-        str2++;
+        len2++;
     }
 
-    // Add endline to terminate the string
-    *str1 = '\0';
+    char *result = malloc(len1 + len2 + 1);
+
+    if (result == NULL)
+    {
+        return NULL;
+    }
+
+    for (int i = 0; i < len1; i++)
+    {
+        result[i] = str1[i];
+    }
+
+    for (int i = 0; i < len2; i++)
+    {
+        result[len1 + i] = str2[i];
+    }
+
+    result[len1 + len2] = '\0';
+
     return result;
 }
 
 char *str_reverse(char *str)
 {
+    if (str == NULL)
+    {
+        return NULL;
+    }
+
     int length = 0;
 
     while (str[length] != '\0')
@@ -45,14 +71,16 @@ char *str_reverse(char *str)
 
 char *str_to_lowercase(char *str)
 {
-    int i = 0;
+    if (str == NULL)
+        return NULL;
 
-    // We use ASCII to make opposite strimg case for [A-Z]
-    while (str[i] != '\0')
+    for (int i = 0; str[i] != '\0'; i++)
     {
-        if (str[i] >= 'A' && str[i] <= 'Z')
-            str[i] += 32;
-        i++;
+        if (!isalpha(str[i]))
+            continue;
+
+        if (isupper(str[i]))
+            str[i] = tolower(str[i]);
     }
     return str;
 }
