@@ -1,5 +1,6 @@
 #include <lib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
 
@@ -72,14 +73,21 @@ void modifyVehicle(vehicle_t *vehicle)
     printf("Modify Vehicle Details:\n");
 
     printf("Enter new brand (current: %s): ", vehicle->brand);
-    scanf(" %99[^\n]", vehicle->brand);
+    fgets(vehicle->brand, sizeof(vehicle->brand), stdin);
+    vehicle->brand[strcspn(vehicle->brand, "\n")] = '\0';
 
     printf("Enter new model (current: %s): ", vehicle->model);
-    scanf(" %99[^\n]", vehicle->model);
+    if (fgets(vehicle->model, sizeof(vehicle->model), stdin) != NULL)
+    {
+        vehicle->model[strcspn(vehicle->model, "\n")] = '\0';
+    }
 
+    char year_buffer[4];
     printf("Enter new year (current: %d): ", vehicle->year);
-    scanf(" %d", &vehicle->year);
-
+    if (fgets(year_buffer, sizeof(year_buffer), stdin) != NULL)
+    {
+        vehicle->year = atoi(year_buffer);
+    }
     printf("Vehicle details updated.\n");
 }
 
@@ -93,10 +101,15 @@ void modifyOwner(owner_t *owner)
     printf("Modify Owner Details:\n");
 
     printf("Enter new name (current: %s): ", owner->name);
-    scanf(" %99[^\n]", owner->name);
-
+    if (fgets(owner->name, sizeof(owner->name), stdin) != NULL)
+    {
+        owner->name[strcspn(owner->name, "\n")] = '\0';
+    }
     printf("Enter new ID (current: %s): ", owner->id);
-    scanf(" %99[^\n]", owner->id);
+    if (fgets(owner->id, sizeof(owner->id), stdin) != NULL)
+    {
+        owner->id[strcspn(owner->id, "\n")] = '\0';
+    }
 
     printf("Owner details updated.\n");
 }
