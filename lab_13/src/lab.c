@@ -2,15 +2,36 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-// replace with a struct from the lab#11
-typedef struct data_t
+#define MAX_NAME_LENGTH 50
+#define MAX_ID_LENGTH 20
+#define MAX_SERVICE_NAME_LENGTH 50
+#define MAX_SERVICES_AMOUNT 10
+
+typedef struct
 {
-    int data;
-} data_t;
+    char name[MAX_NAME_LENGTH];
+    char id[MAX_ID_LENGTH];
+} owner_t;
+
+typedef struct
+{
+    char name[MAX_SERVICE_NAME_LENGTH];
+    float price;
+} service_t;
+
+typedef struct
+{
+    char brand[MAX_NAME_LENGTH];
+    char model[MAX_NAME_LENGTH];
+    int year;
+    owner_t owner;
+    service_t services[MAX_SERVICES_AMOUNT];
+    int length;
+} vehicle_t;
 
 typedef struct node_t
 {
-    data_t data;
+    vehicle_t data;
     struct node_t *next;
 } node_t;
 
@@ -22,7 +43,7 @@ typedef struct forward_list_t
 void push_front(forward_list_t *list, data_t data);
 void pop_front(forward_list_t *list);
 // implement this function
-void dispaly_node(node_t *node);
+void display_node(node_t *node);
 void display_list(forward_list_t *list);
 void free_list(forward_list_t **list);
 void create_list(forward_list_t **list);
@@ -34,7 +55,7 @@ void insert_before(forward_list_t *list, data_t target, data_t data);
 // add yourself
 void erase_after(forward_list_t *list, data_t target);
 bool is_empty(forward_list_t *list);
-bool is_equal(data_t first, data_t second);
+bool is_equal(vehicle_t first, vehicle_t second);
 
 void display_list_2(node_t *head);
 
@@ -45,22 +66,60 @@ int main(int argc, char const *argv[])
     create_list(&list);
 
     // 1 Add elements
-    data_t data = {.data = 10};
-    push_front(list, data);
-    data.data = 20;
-    push_front(list, data);
-    data.data = 30;
-    push_front(list, data);
-    data_t target = {.data = 10};
-    data.data = 50;
-    insert_after(list, target, data);
-    insert_after(list, target, data);
-    // 2 display
-    node_t *prev = find_prev_node(list, target);
-    display_list_2(prev->next);
-    dispaly_node(prev);
-    data.data = 75;
-    insert_before(list, target, data);
+
+    vehicle_t data_1;
+    strcpy(data_1.brand, "Tesla");
+    strcpy(data_1.model, "Model X");
+    data_1.year = 2023;
+    strcpy(data_1.owner.name, "Nikita Afanasiev");
+    strcpy(data_1.owner.id, "1");
+    data_1.length = 0;
+    push_front(list, data_1);
+
+    vehicle_t data_2;
+    strcpy(data_2.brand, "Honda");
+    strcpy(data_2.model, "Civic");
+    data_2.year = 2021;
+    strcpy(data_2.owner.name, "J B");
+    strcpy(data_2.owner.id, "2");
+    data_2.length = 0;
+    insert_after(list, data_1, data_2);
+
+    vehicle_t data_3;
+    strcpy(data_3.brand, "Ford");
+    strcpy(data_3.model, "Focus");
+    data_3.year = 2019;
+    strcpy(data_3.owner.name, "JD");
+    strcpy(data_3.owner.id, "3");
+    data_3.length = 0;
+    insert_after(list, data_2, data_3);
+
+    printf("Displaying list after insertions:\n");
+    display_list(list);
+
+    // 5 Find previous node of data_2
+    node_t *prev = find_prev_node(list, data_2);
+    if (prev != NULL)
+    {
+        printf("Prev node details:\n");
+        display_node(prev);
+    }
+    else
+    {
+        printf("Previous node not found.\n");
+    }
+
+    vehicle_t data_4;
+    strcpy(data_4.brand, "Chevrolet");
+    strcpy(data_4.model, "Impala");
+    data_4.year = 1967;
+    strcpy(data_4.owner.name, "John Winchester");
+    strcpy(data_4.owner.id, "4");
+    data_4.length = 0;
+    insert_before(list, data_2, data_4);
+
+    // 7 Display the list after insertion before
+    printf("Displaying list after inserting before Honda Civic:\n");
     display_list(list);
 
     free_list(&list);
@@ -97,7 +156,12 @@ void display_list(forward_list_t *list)
     node_t *current = list->head->next; // 1st
     while (current != NULL)
     {
-        printf("%d -> ", current->data.data);
+        printf("Brand: %s, Model: %s, Year: %d, Owner: %s, ID: %s\n",
+               current->data.brand,
+               current->data.model,
+               current->data.year,
+               current->data.owner.name,
+               current->data.owner.id);
         current = current->next;
     }
     printf("NULL\n");
@@ -108,7 +172,12 @@ void display_list_2(node_t *head)
     node_t *current = head; // 1st
     while (current != NULL)
     {
-        printf("%d -> ", current->data.data);
+        printf("Brand: %s, Model: %s, Year: %d, Owner: %s, ID: %s\n",
+               current->data.brand,
+               current->data.model,
+               current->data.year,
+               current->data.owner.name,
+               current->data.owner.id);
         current = current->next;
     }
     printf("NULL\n");
@@ -152,12 +221,12 @@ node_t *find(forward_list_t *list, data_t data)
     return NULL;
 }
 
-node_t *find_prev_node(forward_list_t *list, data_t data)
+node_t *find_prev_node(forward_list_t *list, vehicle_t data)
 {
-    node_t *current = list->head->next; // 1st
-    while (current)
+    node_t *current = list->head;
+    while (current->next)
     {
-        if (current->next && current->next->data.data == data.data)
+        if (is_equal(current->next->data, data))
         {
             return current;
         }
@@ -165,6 +234,7 @@ node_t *find_prev_node(forward_list_t *list, data_t data)
     }
     return NULL;
 }
+
 void insert_after(forward_list_t *list, data_t target, data_t data)
 {
     node_t *current = find(list, target); // 1st
@@ -180,25 +250,56 @@ void insert_after(forward_list_t *list, data_t target, data_t data)
 void insert_before(forward_list_t *list, data_t target, data_t data)
 {
     node_t *current = find_prev_node(list, target); // 1st
-    if (current)                                    // current != NULL it is not equal to NULL
-    {
-        node_t *for_insert = (node_t *)malloc(sizeof(node_t));
-        for_insert->data.data = data.data;
-        for_insert->next = current->next;
-        current->next = for_insert;
-    }
+    if (current)
+        if (current)
+        {
+            node_t *for_insert = create_node(data);
+            for_insert->next = current->next;
+            current->next = for_insert;
+        }
 }
 
-void dispaly_node(node_t *node)
+void display_node(node_t *node)
 {
     if (node)
     {
-        printf("%p : %d\n", node, node->data.data);
+        printf("Node Address: %p\n", (void *)node);
+        printf("Brand: %s, Model: %s, Year: %d, Owner: %s, ID: %s\n",
+               node->data.brand,
+               node->data.model,
+               node->data.year,
+               node->data.owner.name,
+               node->data.owner.id);
     }
     else
     {
         puts("NULL");
     }
+}
+
+void erase_after(forward_list_t *list, data_t target)
+{
+    node_t *current = find(list, target);
+    if (current)
+    {
+        node_t *for_deletion = current->next;
+        current->next = current->next->next;
+        free(for_deletion);
+    }
+}
+
+bool is_empty(forward_list_t *list)
+{
+    return list->head->next == NULL;
+}
+
+bool is_equal(vehicle_t first, vehicle_t second)
+{
+    return strcmp(first.brand, second.brand) == 0 &&
+           strcmp(first.model, second.model) == 0 &&
+           first.year == second.year &&
+           strcmp(first.owner.name, second.owner.name) == 0 &&
+           strcmp(first.owner.id, second.owner.id) == 0;
 }
 
 //
