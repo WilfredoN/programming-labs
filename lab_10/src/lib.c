@@ -41,11 +41,11 @@ int write_to(const char *filename, int arr[100][100][100])
         printf("Failed to open file\n");
         return -1;
     }
-    for (int i = 0; i < 100; i++)
+    for (int j = 0; j < 100; j++)
     {
-        for (int j = 0; j < 100; j++)
+        for (int k = 0; k < 100; k++)
         {
-            for (int k = 0; k < 100; k++)
+            for (int i = 0; i < 100; i++)
             {
                 fprintf(file, "%d ", arr[i][j][k]);
             }
