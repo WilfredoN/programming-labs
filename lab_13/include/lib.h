@@ -70,6 +70,4 @@ void erase_after(forward_list_t *list, vehicle_t target);
 bool is_empty(forward_list_t *list);
 bool is_equal(vehicle_t first, vehicle_t second);
 
-void display_list_2(node_t *head);
-
 #endif // LIB_H

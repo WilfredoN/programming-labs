@@ -61,22 +61,6 @@ void display_list(forward_list_t *list)
     printf("NULL\n");
 }
 
-void display_list_2(node_t *head)
-{
-    node_t *current = head;
-    while (current != NULL)
-    {
-        printf("Brand: %s, Model: %s, Year: %d, Owner: %s, ID: %s\n",
-               current->data.brand,
-               current->data.model,
-               current->data.year,
-               current->data.owner.name,
-               current->data.owner.id);
-        current = current->next;
-    }
-    printf("NULL\n");
-}
-
 void display_list_id(forward_list_t *list)
 {
     node_t *current = list->head->next;
@@ -201,19 +185,18 @@ void insert_before(forward_list_t *list, vehicle_t target, vehicle_t data)
 
 void display_node(node_t *node)
 {
-    if (node)
+    node_t *current = node;
+    while (current != NULL)
     {
         printf("Brand: %s, Model: %s, Year: %d, Owner: %s, ID: %s\n",
-               node->data.brand,
-               node->data.model,
-               node->data.year,
-               node->data.owner.name,
-               node->data.owner.id);
+               current->data.brand,
+               current->data.model,
+               current->data.year,
+               current->data.owner.name,
+               current->data.owner.id);
+        current = current->next;
     }
-    else
-    {
-        puts("NULL");
-    }
+    printf("NULL\n");
 }
 
 void erase_after(forward_list_t *list, vehicle_t target)
