@@ -32,7 +32,7 @@ int main(int argc, char const *argv[])
     data_3.length = 0;
     insert_after(list, data_2, data_3);
 
-    printf("Displaying list after insertions:\n");
+    printf("Displaying list after insertions:\n\n");
     display_list(list);
 
     node_t *prev = find_prev_node(list, data_2);
@@ -41,6 +41,7 @@ int main(int argc, char const *argv[])
     {
         printf("Prev node details:\n");
         display_node(prev);
+        printf("\n");
     }
     else
     {
@@ -56,14 +57,21 @@ int main(int argc, char const *argv[])
     data_4.length = 0;
     insert_before(list, data_2, data_4);
 
-    printf("Displaying list after inserting before Honda Civic:\n");
+    printf("\nDisplaying list after inserting before Honda Civic:\n\n");
     display_list(list);
 
-    printf("Displaying list by ID:\n");
+    printf("\nDisplaying list by ID:\n");
     display_list_id(list);
 
-    printf("Displaying list by Owner:\n");
+    printf("\nDisplaying list by Owner:\n");
     display_list_owner(list);
+
+    printf("\nDisplaying list in reverse order:\n\n");
+    display_list_reverse(list);
+
+    erase_after(list, data_1);
+    printf("\nDisplaying list after deleting after Tesla Model X:\n");
+    display_list(list);
 
     free_list(&list);
     return 0;

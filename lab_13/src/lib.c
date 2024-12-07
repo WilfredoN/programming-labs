@@ -1,4 +1,3 @@
-
 #include "lib.h"
 
 node_t *create_node(vehicle_t data)
@@ -6,6 +5,7 @@ node_t *create_node(vehicle_t data)
     node_t *node = (node_t *)malloc(sizeof(node_t));
     node->data = data;
     node->next = NULL;
+    node->prev = NULL;
     return node;
 }
 
@@ -13,7 +13,17 @@ void push_front(forward_list_t *list, vehicle_t data)
 {
     node_t *node = create_node(data);
     node->next = list->head->next;
+    if (list->head->next != NULL)
+    {
+        list->head->next->prev = node;
+    }
     list->head->next = node;
+    node->prev = list->head;
+
+    if (list->tail == list->head)
+    {
+        list->tail = node;
+    }
 }
 
 void pop_front(forward_list_t *list)
@@ -23,7 +33,15 @@ void pop_front(forward_list_t *list)
         return;
     }
     node_t *for_deletion = list->head->next;
-    list->head->next = list->head->next->next;
+    list->head->next = for_deletion->next;
+    if (for_deletion->next != NULL)
+    {
+        for_deletion->next->prev = list->head;
+    }
+    else
+    {
+        list->tail = list->head;
+    }
     free(for_deletion);
 }
 
@@ -69,6 +87,7 @@ void display_list_id(forward_list_t *list)
     }
     printf("NULL\n");
 }
+
 void display_list_owner(forward_list_t *list)
 {
     node_t *current = list->head->next;
@@ -78,6 +97,22 @@ void display_list_owner(forward_list_t *list)
         current = current->next;
     }
     printf("NULL\n");
+}
+
+void display_list_reverse(forward_list_t *list)
+{
+    node_t *current = list->tail;
+    while (current != list->head)
+    {
+        printf("Brand: %s, Model: %s, Year: %d, Owner: %s, ID: %s\n",
+               current->data.brand,
+               current->data.model,
+               current->data.year,
+               current->data.owner.name,
+               current->data.owner.id);
+        current = current->prev;
+    }
+    printf("HEAD\n");
 }
 
 void free_list(forward_list_t **list)
@@ -97,8 +132,8 @@ void free_list(forward_list_t **list)
 void create_list(forward_list_t **list)
 {
     *list = (forward_list_t *)malloc(sizeof(forward_list_t));
-    (*list)->head = (node_t *)malloc(sizeof(node_t));
-    (*list)->head->next = NULL;
+    (*list)->head = create_node((vehicle_t){0});
+    (*list)->tail = (*list)->head;
 }
 
 node_t *find(forward_list_t *list, vehicle_t data)
@@ -117,14 +152,10 @@ node_t *find(forward_list_t *list, vehicle_t data)
 
 node_t *find_prev_node(forward_list_t *list, vehicle_t data)
 {
-    node_t *current = list->head;
-    while (current->next)
+    node_t *node = find(list, data);
+    if (node && node->prev != list->head)
     {
-        if (is_equal(current->next->data, data))
-        {
-            return current;
-        }
-        current = current->next;
+        return node->prev;
     }
     return NULL;
 }
@@ -136,27 +167,42 @@ void insert_after(forward_list_t *list, vehicle_t target, vehicle_t data)
     {
         node_t *for_insert = create_node(data);
         for_insert->next = current->next;
+        for_insert->prev = current;
+        if (current->next != NULL)
+        {
+            current->next->prev = for_insert;
+        }
         current->next = for_insert;
+
+        if (current == list->tail)
+        {
+            list->tail = for_insert;
+        }
     }
 }
 
 void insert_before(forward_list_t *list, vehicle_t target, vehicle_t data)
 {
-    node_t *current = find_prev_node(list, target);
+    node_t *current = find(list, target);
     if (current)
-        if (current)
+    {
+        node_t *for_insert = create_node(data);
+        for_insert->next = current;
+        for_insert->prev = current->prev;
+        current->prev->next = for_insert;
+        current->prev = for_insert;
+
+        if (current == list->head->next)
         {
-            node_t *for_insert = create_node(data);
-            for_insert->next = current->next;
-            current->next = for_insert;
+            list->head->next = for_insert;
         }
+    }
 }
 
 void display_node(node_t *node)
 {
     if (node)
     {
-        printf("Node Address: %p\n", (void *)node);
         printf("Brand: %s, Model: %s, Year: %d, Owner: %s, ID: %s\n",
                node->data.brand,
                node->data.model,
@@ -173,10 +219,18 @@ void display_node(node_t *node)
 void erase_after(forward_list_t *list, vehicle_t target)
 {
     node_t *current = find(list, target);
-    if (current)
+    if (current && current->next != NULL)
     {
         node_t *for_deletion = current->next;
-        current->next = current->next->next;
+        current->next = for_deletion->next;
+        if (for_deletion->next != NULL)
+        {
+            for_deletion->next->prev = current;
+        }
+        else
+        {
+            list->tail = current;
+        }
         free(for_deletion);
     }
 }

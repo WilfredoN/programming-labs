@@ -37,11 +37,13 @@ typedef struct node_t
 {
     vehicle_t data;
     struct node_t *next;
+    struct node_t *prev;
 } node_t;
 
 typedef struct forward_list_t
 {
     node_t *head;
+    node_t *tail;
 } forward_list_t;
 
 void push_front(forward_list_t *list, vehicle_t data);
@@ -51,6 +53,7 @@ void display_node(node_t *node);
 void display_list(forward_list_t *list);
 void display_list_id(forward_list_t *list);
 void display_list_owner(forward_list_t *list);
+void display_list_reverse(forward_list_t *list);
 
 void free_list(forward_list_t **list);
 
