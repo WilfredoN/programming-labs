@@ -83,22 +83,6 @@ void display_list_owner(forward_list_t *list)
     printf("NULL\n");
 }
 
-void display_list_reverse(forward_list_t *list)
-{
-    node_t *current = list->tail;
-    while (current != list->head)
-    {
-        printf("Brand: %s, Model: %s, Year: %d, Owner: %s, ID: %s\n",
-               current->data.brand,
-               current->data.model,
-               current->data.year,
-               current->data.owner.name,
-               current->data.owner.id);
-        current = current->prev;
-    }
-    printf("HEAD\n");
-}
-
 void free_list(forward_list_t **list)
 {
     node_t *current = (*list)->head->next;
@@ -125,7 +109,7 @@ node_t *find(forward_list_t *list, vehicle_t data)
     node_t *current = list->head->next;
     while (current)
     {
-        if (is_equal(current->data, data))
+        if (is_node_equal(current->data, data))
         {
             return current;
         }
@@ -223,7 +207,7 @@ bool is_empty(forward_list_t *list)
     return list->head->next == NULL;
 }
 
-bool is_equal(vehicle_t first, vehicle_t second)
+bool is_node_equal(vehicle_t first, vehicle_t second)
 {
     return strcmp(first.brand, second.brand) == 0 &&
            strcmp(first.model, second.model) == 0 &&
