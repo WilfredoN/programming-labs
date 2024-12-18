@@ -4,69 +4,33 @@
 #define FILE_TXT "vehicles.txt"
 #define FILE_BIN "vehicles.bin"
 
+vehicle_t create_vehicle(const char *brand, const char *model, int year, const char *owner_name, const char *owner_id) {
+    vehicle_t vehicle;
+    memset(&vehicle, 0, sizeof(vehicle_t));
+    strcpy(vehicle.brand, brand);
+    strcpy(vehicle.model, model);
+    vehicle.year = year;
+    strcpy(vehicle.owner.name, owner_name);
+    strcpy(vehicle.owner.id, owner_id);
+    vehicle.length = 0;
+    return vehicle;
+}
+
 int main(int argc, char const *argv[])
 {
     forward_list_t *list = NULL;
     create_list(&list);
 
-    vehicle_t data_1;
-    memset(&data_1, 0, sizeof(vehicle_t));
-
-    strcpy(data_1.brand, "Tesla");
-    strcpy(data_1.model, "Model X");
-
-    data_1.year = 2023;
-
-    strcpy(data_1.owner.name, "Nikita Afanasiev");
-    strcpy(data_1.owner.id, "1");
-
-    data_1.length = 0;
-
+    vehicle_t data_1 = create_vehicle("Tesla", "Model X", 2023, "Nikita Afanasiev", "1");
     push_front(list, data_1);
 
-    vehicle_t data_2;
-    memset(&data_2, 0, sizeof(vehicle_t));
-
-    strcpy(data_2.brand, "Honda");
-    strcpy(data_2.model, "Civic");
-
-    data_2.year = 2021;
-
-    strcpy(data_2.owner.name, "J B");
-    strcpy(data_2.owner.id, "2");
-
-    data_2.length = 0;
-
+    vehicle_t data_2 = create_vehicle("Honda", "Civic", 2021, "J B", "2");
     insert_after(list, data_1, data_2);
 
-    vehicle_t data_3;
-    memset(&data_3, 0, sizeof(vehicle_t));
-
-    strcpy(data_3.brand, "Ford");
-    strcpy(data_3.model, "Focus");
-
-    data_3.year = 2019;
-
-    strcpy(data_3.owner.name, "JD");
-    strcpy(data_3.owner.id, "3");
-
-    data_3.length = 0;
-
+    vehicle_t data_3 = create_vehicle("Ford", "Focus", 2019, "JD", "3");
     insert_after(list, data_2, data_3);
 
-    vehicle_t data_4;
-    memset(&data_4, 0, sizeof(vehicle_t));
-
-    strcpy(data_4.brand, "Chevrolet");
-    strcpy(data_4.model, "Impala");
-
-    data_4.year = 1967;
-
-    strcpy(data_4.owner.name, "John Winchester");
-    strcpy(data_4.owner.id, "4");
-
-    data_4.length = 0;
-
+    vehicle_t data_4 = create_vehicle("Chevrolet", "Impala", 1967, "John Winchester", "4");
     insert_before(list, data_2, data_4);
 
     if (save_to_text(list, FILE_TXT))
