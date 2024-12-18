@@ -3,6 +3,10 @@
 node_t *create_node(vehicle_t data)
 {
     node_t *node = (node_t *)malloc(sizeof(node_t));
+    if (!node)
+    {
+        return NULL;
+    }
     node->data = data;
     node->next = NULL;
     node->prev = NULL;
