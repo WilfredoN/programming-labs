@@ -8,9 +8,9 @@
 
 **Course:** **_Programming. Part1_**
 
-**REPORT** on the laboratory work #13
+**REPORT** on the laboratory work #13 & #14
 
-**Topic:** _"Single linked list"_
+**Topic:** _"Single linked list. Text and binary read and write."_
 
 > **_Prepared by:_**
 >
@@ -38,6 +38,20 @@
     ...some magic...
     make
     valgrind --leak-check=full -s ./main
+    make clean
+```
+
+## Task 14
+
+### Explanation
+> To create a program that reads the data created in Task 13 and writes it to a file in text and binary format. 
+
+### Command performed
+```bash
+    cd lab_13
+    ...some additional improvements...
+    make
+    valgrind --leak-check=full -s ./main_io
     make clean
 ```
 
